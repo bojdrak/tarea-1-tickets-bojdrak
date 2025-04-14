@@ -49,26 +49,41 @@ void toLowerCase(char *str) {
 
 void register_ticket(ticket_system *system) {
   Ticket *new_ticket = malloc(sizeof(Ticket));
+
   printf("Ingrese ID del ticket: ");
   scanf("%s", new_ticket->id);
-  printf("Ingrese descripción: ");
   getchar();
+
+  printf("Ingrese descripción: ");
   fgets(new_ticket->description, 100, stdin);
+
   new_ticket->description[strcspn(new_ticket->description, "\n")] = '\0';
+
   strcpy(new_ticket->priority, "Bajo");
   new_ticket->timestamp = time(NULL);
   list_pushBack(system->low, new_ticket);
+
   printf("Ticket registrado con prioridad 'Bajo'.\n");
 }
 
 void assign_priority(ticket_system *system) {
   char id[20], inputPriority[20];
+
   printf("Ingrese ID del ticket: ");
   scanf("%s", id);
+  getchar();
   printf("Ingrese nueva prioridad (Alto, Medio, Bajo): ");
-  scanf("%s", inputPriority);
-  toLowerCase(inputPriority);
 
+  scanf("%s", inputPriority);
+  getchar(); 
+
+  // Permitir ingresar alto, medio o bajo como 1, 2 o 3
+  if (strcmp(inputPriority, "1") == 0) strcpy(inputPriority, "alto");
+  else if (strcmp(inputPriority, "2") == 0) strcpy(inputPriority, "medio");
+  else if (strcmp(inputPriority, "3") == 0) strcpy(inputPriority, "bajo");
+  else toLowerCase(inputPriority); // Convertir a minúsculas en todo otro caso
+  
+  // Convertir a formato correcto "Alto", "Medio", "Bajo" para simplificar frontend
   char newPriority[10];
   if (strcmp(inputPriority, "alto") == 0) strcpy(newPriority, "Alto");
   else if (strcmp(inputPriority, "medio") == 0) strcpy(newPriority, "Medio");
@@ -190,8 +205,8 @@ int main() {
     default:
       puts("Opción inválida. Intente nuevamente.");
     }
-
-    waitForKeyPress();
+    
+    waitForKeyPress(); 
 
   } while (option != '6');
 
